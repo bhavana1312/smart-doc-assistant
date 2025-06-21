@@ -54,7 +54,7 @@ export default function LandingPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          Talk to Your Documents with{" "}
+          Learn Smarter with{" "}
           <span className="text-blue-600">SmartDoc Assistant</span>
         </motion.h2>
         <motion.p
@@ -63,8 +63,9 @@ export default function LandingPage() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.6 }}
         >
-          Upload your PDFs and ask questions in natural language. Get answers
-          instantly, powered by AI.
+          Upload your PDFs, ask questions, generate flashcards, and take quizzes
+          — all in one AI-powered learning assistant designed to supercharge
+          your understanding.
         </motion.p>
 
         <motion.div
@@ -108,22 +109,22 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
           <FeatureCard
             title="Chat with PDFs"
-            description="Upload your documents and ask questions. Get contextual answers from specific pages."
+            description="Ask questions directly from your uploaded documents. Get page-specific, context-aware answers instantly."
             icon="📄"
             delay={0.1}
             darkMode={darkMode}
           />
           <FeatureCard
-            title="AI-powered Q&A"
-            description="We use vector search and LLMs to provide accurate, quick, and context-rich answers."
-            icon="🤖"
+            title="Flashcard & Quiz Generation"
+            description="Automatically generate flashcards and quizzes from your content. Review key concepts and test your knowledge seamlessly."
+            icon="🧠"
             delay={0.2}
             darkMode={darkMode}
           />
           <FeatureCard
-            title="Privacy & Simplicity"
-            description="No data sharing. Your documents stay private and responses are generated instantly."
-            icon="🔒"
+            title="Track Learning Progress"
+            description="Get personalized learning reports based on your interactions, quiz scores, and flashcard reviews — all private and secure."
+            icon="📊"
             delay={0.3}
             darkMode={darkMode}
           />

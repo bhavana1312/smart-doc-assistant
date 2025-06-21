@@ -12,7 +12,6 @@ async def generate_questions(request: Request):
     if not email:
         raise HTTPException(status_code=400, detail="Email required")
 
-    # Example: fetch PDF text from MongoDB
     user = users_collection.find_one({"email": email})
     if not user or "pdfs" not in user or len(user["pdfs"]) == 0:
         raise HTTPException(status_code=404, detail="No PDFs found for user")

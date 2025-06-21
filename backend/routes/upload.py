@@ -14,26 +14,21 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
     print("🟡 Headers:", request.headers)
     print("🟡 File name:", file.filename if file else "❌ No file received")
 
-    # ✅ Step 1: Extract email from headers
     user_email = request.headers.get("email")
     if not user_email:
         raise HTTPException(status_code=400, detail="Missing email in headers")
 
-    # ✅ Step 2: Read file bytes once
     contents = await file.read()
 
-    # ✅ Step 3: Save to temp for PDF processing
     temp_dir = "temp"
     os.makedirs(temp_dir, exist_ok=True)
     file_path = os.path.join(temp_dir, file.filename)
     with open(file_path, "wb") as f:
         f.write(contents)
 
-    # ✅ Step 4: Extract text
     text = extract_text_from_pdf(file_path)
     print("🔹 Extracted text length:", len(text))
 
-    # ✅ Step 5: Vector embedding
     chunks = chunk_text(text)
     embeddings = get_embeddings(chunks)
     print(f"🔹 Generated {len(embeddings)} embeddings")
@@ -42,11 +37,10 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
     init_collection(collection_name, dim=768)
     insert_embeddings(collection_name, embeddings, chunks)
 
-    # ✅ Step 6: Store in MongoDB inside user's document
     pdf_entry = {
         "filename": file.filename,
         "text": text,
-        "pdf_data": Binary(contents)  # ✅ Binary wrapping for MongoDB
+        "pdf_data": Binary(contents)
     }
 
     result = users_collection.update_one(

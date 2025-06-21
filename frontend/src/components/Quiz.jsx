@@ -9,6 +9,8 @@ export default function Quiz() {
   const [score, setScore] = useState(0);
   const [darkMode, setDarkMode] = useState(false);
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
+
 
   useEffect(() => {
     const mode = localStorage.getItem("darkMode") === "true";
@@ -19,9 +21,9 @@ export default function Quiz() {
     const fetchQuestions = async () => {
       try {
         const res = await fetch(
-          `${
-            import.meta.env.VITE_BACKEND_URL
-          }/generate-quiz?email=bhavana13sree@gmail.com`,
+          `${import.meta.env.VITE_BACKEND_URL}/generate-quiz?email=${
+            user.email
+          }`,
           { method: "POST" }
         );
         const data = await res.json();
@@ -128,11 +130,7 @@ export default function Quiz() {
             </motion.div>
           ))}
 
-          <motion.div
-            className="text-center"
-            whileTap={{ scale: 0.97 }}
-            whileHover={{ scale: 1.03 }}
-          >
+          <motion.div className="text-center" whileTap={{ scale: 0.97 }} whileHover={{ scale: 1.03 }}>
             <button
               onClick={handleSubmit}
               className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-medium transition"

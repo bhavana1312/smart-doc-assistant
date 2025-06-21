@@ -1,25 +1,3 @@
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import LandingPage from "./components/LandingPage";
-// import Login from "./components/Login";
-// import Signup from "./components/Signup";
-// import UploadPDF from "./components/UploadPDF";
-// import ChatBox from "./components/ChatBox";
-
-// function App() {
-//   return (
-//     <Router>
-//       <Routes>
-//         <Route path="/" element={<LandingPage />} />
-//         <Route path="/login" element={<Login />} />
-//         <Route path="/signup" element={<Signup />} />
-//         <Route path="/upload" element={<UploadPDF />} />
-//         <Route path="/chat" element={<ChatBox />} />
-//       </Routes>
-//     </Router>
-//   );
-// }
-
-// export default App;
 import {
   BrowserRouter as Router,
   Routes,
@@ -33,8 +11,8 @@ import Signup from "./components/Signup";
 import UploadPDF from "./components/UploadPDF";
 import ChatBox from "./components/ChatBox";
 import Navbar from "./components/Navbar";
-import Quiz from "./components/Quiz"
-
+import Quiz from "./components/Quiz";
+import GenerateFlashcards from "./components/GenerateFlashcards";
 // ✅ PrivateRoute to protect authenticated pages
 function PrivateRoute({ element }) {
   const user = localStorage.getItem("user");
@@ -52,8 +30,9 @@ function AppContent() {
     "/quiz",
     "/login",
     "/signup",
+    "/flashcards"
   ].includes(location.pathname);
-  const showNavbar = isProtectedPath ;
+  const showNavbar = isProtectedPath;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -71,9 +50,10 @@ function AppContent() {
             path="/chat"
             element={<PrivateRoute element={<ChatBox />} />}
           />
+          <Route path="/quiz" element={<PrivateRoute element={<Quiz />} />} />
           <Route
-            path="/quiz"
-            element={<PrivateRoute element={<Quiz />} />}
+            path="/flashcards"
+            element={<PrivateRoute element={<GenerateFlashcards />} />}
           />
         </Routes>
       </div>

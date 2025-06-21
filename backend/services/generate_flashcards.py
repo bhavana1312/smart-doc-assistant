@@ -13,24 +13,24 @@ if not groq_api_key:
 client = Groq(api_key=groq_api_key)
 
 
-def generate_mcq_from_text(pdf_text: str, num_questions: int = 5):
+def generate_flashcards_from_text(pdf_text: str, num_cards: int = 9):
+    print("hello")
     prompt = f"""
-You are an educational assistant. Based on the academic content below, generate {num_questions} multiple choice questions (MCQs). 
+You are a helpful study assistant. Generate {num_cards} flashcards from the academic content provided below.
 
-Each question should include:
-- A question
-- Exactly 4 options
-- The correct answer
+Each flashcard should include:
+- A clear and concise question
+- A direct and informative answer
 
-Return the output in valid JSON like this:
+Return the flashcards as a JSON array, like this:
 [
   {{
     "question": "What is ...?",
-    "options": ["Option A", "Option B", "Option C", "Option D"],
-    "answer": "Option A"
+    "answer": "..."
   }},
   ...
-] No other statements other than this
+]
+No explanations. No markdown. Just valid JSON.
 
 Content:
 \"\"\"
@@ -38,20 +38,18 @@ Content:
 \"\"\"
 """
 
-
     try:
         response = client.chat.completions.create(
             model="llama3-70b-8192",
             messages=[
-                {"role": "system", "content": "You generate high-quality MCQs based on educational text."},
+                {"role": "system", "content": "You generate helpful and accurate flashcards from educational material."},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.3,
             max_tokens=1024,
         )
-        
         reply = response.choices[0].message.content.strip()
         return reply
     except Exception as e:
-        print("❌ Error generating MCQs:", e)
+        print("❌ Error generating flashcards:", e)
         return []

@@ -1,9 +1,19 @@
+import os
+from dotenv import load_dotenv
 from qdrant_client import QdrantClient
 from qdrant_client.models import PointStruct, VectorParams, Distance
 
+load_dotenv()
+
+qdrant_url = os.getenv("QDRANT_URL")
+qdrant_api_key = os.getenv("QDRANT_API_KEY")
+
+if not qdrant_url or not qdrant_api_key:
+    raise ValueError("Qdrant URL or API key is missing from environment variables")
+
 client = QdrantClient(
-    url="https://67485512-3bcc-4232-a87c-22cd50d15a16.us-east4-0.gcp.cloud.qdrant.io:6333", 
-    api_key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.JOxeh-XYIUyUQ27zn_NkWwWnSBFYXAz_Gjze7lrACec",
+    url=qdrant_url,
+    api_key=qdrant_api_key,
 )
 
 print(client.get_collections())

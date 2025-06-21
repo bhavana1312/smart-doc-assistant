@@ -14,11 +14,6 @@ class User(BaseModel):
 def register(user: User):
     if users_collection.find_one({"email": user.email}):
         raise HTTPException(status_code=400, detail="Email already registered")
-    # users_collection.insert_one({
-    #     "name": user.name,
-    #     "email": user.email,
-    #     "hashed_password": hash_password(user.password)
-    # })
 
     users_collection.insert_one({
         "name": user.name,

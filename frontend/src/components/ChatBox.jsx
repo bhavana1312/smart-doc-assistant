@@ -68,6 +68,10 @@ export default function ChatBox() {
     navigate("/quiz");
   };
 
+  const handleGenerateFlashcards = () => {
+    navigate("/flashcards");
+  };
+
   const bgGradient = darkMode
     ? "bg-gradient-to-br from-gray-900 via-black to-gray-800"
     : "bg-gradient-to-br from-blue-100 via-white to-pink-100";
@@ -173,12 +177,20 @@ export default function ChatBox() {
           </button>
         </form>
 
-        <button
-          onClick={handleGenerateQuiz}
-          className="w-full py-4 text-lg font-semibold text-white rounded-xl bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 shadow-md hover:shadow-xl transition"
-        >
-          Generate Questions
-        </button>
+        <div className="flex flex-col sm:flex-row gap-4 mt-6">
+          <button
+            onClick={handleGenerateQuiz}
+            className="flex-1 py-4 text-lg font-medium text-white rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all shadow-sm hover:shadow-md"
+          >
+            Generate Questions
+          </button>
+          <button
+            onClick={handleGenerateFlashcards}
+            className="flex-1 py-4 text-lg font-medium text-white rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all shadow-sm hover:shadow-md"
+          >
+            Generate Flashcards
+          </button>
+        </div>
       </motion.div>
     </div>
   );
