@@ -10,12 +10,17 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
 } from "recharts";
 import { motion } from "framer-motion";
 
 export default function Dashboard() {
   const [progress, setProgress] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
+  const [weakTopicStats, setWeakTopicStats] = useState({});
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
 
@@ -33,13 +38,44 @@ export default function Dashboard() {
     fetchProgress();
   }, []);
 
+  useEffect(() => {
+    const topicMap = {};
+    progress.forEach((entry) => {
+      if (entry.activity_type === "quiz" && entry.weak_topics) {
+        entry.weak_topics.forEach((topicObj) => {
+          const { topic, incorrect, total } = topicObj;
+          if (!topicMap[topic]) topicMap[topic] = { incorrect: 0, total: 0 };
+          topicMap[topic].incorrect += incorrect;
+          topicMap[topic].total += total;
+        });
+      }
+    });
+    setWeakTopicStats(topicMap);
+  }, [progress]);
+
   const quizData = progress
     .filter((p) => p.activity_type === "quiz")
     .map((entry) => ({
       date: new Date(entry.timestamp).toLocaleDateString(),
       score: entry.score,
-      total: entry.questions_total,
+      total: entry.total_questions,
     }));
+
+  const pieData = Object.entries(weakTopicStats).map(([topic, stats]) => ({
+    name: topic,
+    value: stats.incorrect,
+  }));
+
+  const COLORS = [
+    "#6366F1", // Indigo-500
+    "#F472B6", // Pink-400
+    "#34D399", // Emerald-400
+    "#FBBF24", // Amber-400
+    "#60A5FA", // Blue-400
+    "#A78BFA", // Purple-400
+    "#F87171", // Red-400
+    "#10B981", // Green-500
+  ];
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -99,8 +135,9 @@ export default function Dashboard() {
         </motion.p>
       ) : (
         <div className="flex flex-col gap-12 max-w-6xl mx-auto w-full">
+          {/* Line Chart */}
           <motion.div
-            className={`rounded-2xl shadow-lg p-6 border transition-all ${
+            className={`rounded-2xl shadow-lg p-6 border ${
               darkMode
                 ? "bg-gray-900 border-gray-700"
                 : "bg-white border-gray-300"
@@ -141,8 +178,9 @@ export default function Dashboard() {
             </ResponsiveContainer>
           </motion.div>
 
+          {/* Bar Chart */}
           <motion.div
-            className={`rounded-2xl shadow-lg p-6 border transition-all ${
+            className={`rounded-2xl shadow-lg p-6 border ${
               darkMode
                 ? "bg-gray-900 border-gray-700"
                 : "bg-white border-gray-300"
@@ -181,6 +219,106 @@ export default function Dashboard() {
               </BarChart>
             </ResponsiveContainer>
           </motion.div>
+
+          {/* Weak Topics Table */}
+          {Object.keys(weakTopicStats).length > 0 && (
+            <motion.div
+              className={`rounded-2xl shadow-lg p-6 border ${
+                darkMode
+                  ? "bg-gray-900 border-gray-700"
+                  : "bg-white border-gray-300"
+              }`}
+              initial="hidden"
+              animate="visible"
+              variants={containerVariants}
+            >
+              <h3
+                className={`text-2xl font-semibold mb-4 ${
+                  darkMode ? "text-rose-400" : "text-rose-600"
+                }`}
+              >
+                📉 Persistent Weak Topics
+              </h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left table-auto border-collapse">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2">Topic</th>
+                      <th className="px-4 py-2">Incorrect</th>
+                      <th className="px-4 py-2">Total</th>
+                      <th className="px-4 py-2">Accuracy</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.entries(weakTopicStats)
+                      .sort((a, b) => b[1].incorrect - a[1].incorrect)
+                      .map(([topic, { incorrect, total }]) => {
+                        const accuracy = (
+                          ((total - incorrect) / total) *
+                          100
+                        ).toFixed(1);
+                        return (
+                          <tr key={topic} className="border-t">
+                            <td className="px-4 py-2">{topic}</td>
+                            <td className="px-4 py-2">{incorrect}</td>
+                            <td className="px-4 py-2">{total}</td>
+                            <td className="px-4 py-2 font-semibold">
+                              <span
+                                className={`${
+                                  accuracy < 60
+                                    ? "text-red-500"
+                                    : accuracy < 80
+                                    ? "text-yellow-500"
+                                    : "text-green-600"
+                                }`}
+                              >
+                                {accuracy}%
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Pie Chart */}
+          {pieData.length > 0 && (
+            <motion.div
+              className={`rounded-2xl shadow-lg p-6 border ${
+                darkMode
+                  ? "bg-gray-900 border-gray-700"
+                  : "bg-white border-gray-300"
+              }`}
+              initial="hidden"
+              animate="visible"
+              variants={containerVariants}
+            >
+              <h3
+                className={`text-2xl font-semibold mb-4 ${
+                  darkMode ? "text-yellow-300" : "text-yellow-600"
+                }`}
+              >
+                🍩 Weak Topics Distribution
+              </h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie dataKey="value" data={pieData} outerRadius={100} label>
+                    {pieData.map((_, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Legend />
+                  <Tooltip contentStyle={tooltipContentStyle} />
+                </PieChart>
+              </ResponsiveContainer>
+            </motion.div>
+          )}
         </div>
       )}
 

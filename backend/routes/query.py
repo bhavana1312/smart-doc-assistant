@@ -94,25 +94,24 @@ async def generate_flashcards(email: str):
 @router.post("/save-quiz-progress")
 async def save_quiz_progress(request: Request):
     body = await request.json()
-    email = body.get("email")
-    score = body.get("score")
-    total_questions = body.get("total_questions")
-    correct_answers = body.get("correct_answers")
-
-    if not email:
-        raise HTTPException(status_code=400, detail="Email required")
+    email = body["email"]
+    score = body["score"]
+    total = body["total_questions"]
+    correct = body["correct_answers"]
+    weak_topics = body.get("weak_topics", [])
 
     doc = {
         "email": email,
         "activity_type": "quiz",
-        "timestamp": datetime.utcnow(),
         "score": score,
-        "questions_total": total_questions,
-        "correct_answers": correct_answers,
+        "total_questions": total,
+        "correct_answers": correct,
+        "weak_topics": weak_topics,
+        "timestamp": datetime.now()
     }
 
     learning_progress_collection.insert_one(doc)
-    return {"message": "Progress saved"}
+    return {"status": "success"}
 
 @router.get("/progress/{email}")
 async def get_learning_progress(email: str):
