@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from pydantic import BaseModel
 from models.embedder import get_embeddings
 from services.vector_store import retrieve_top_k
@@ -10,6 +10,8 @@ from fastapi import APIRouter, HTTPException
 from db.mongo import users_collection
 from services.generate_questions import generate_mcq_from_text
 from services.generate_flashcards import generate_flashcards_from_text
+from db.mongo import learning_progress_collection
+from datetime import datetime
 
 
 load_dotenv()
@@ -87,3 +89,34 @@ async def generate_flashcards(email: str):
     response = generate_flashcards_from_text(pdf_text)
 
     return JSONResponse(content={"response": response})
+
+
+@router.post("/save-quiz-progress")
+async def save_quiz_progress(request: Request):
+    body = await request.json()
+    email = body.get("email")
+    score = body.get("score")
+    total_questions = body.get("total_questions")
+    correct_answers = body.get("correct_answers")
+
+    if not email:
+        raise HTTPException(status_code=400, detail="Email required")
+
+    doc = {
+        "email": email,
+        "activity_type": "quiz",
+        "timestamp": datetime.utcnow(),
+        "score": score,
+        "questions_total": total_questions,
+        "correct_answers": correct_answers,
+    }
+
+    learning_progress_collection.insert_one(doc)
+    return {"message": "Progress saved"}
+
+@router.get("/progress/{email}")
+async def get_learning_progress(email: str):
+    entries = list(learning_progress_collection.find({"email": email}))
+    for e in entries:
+        e["_id"] = str(e["_id"])  # Convert ObjectId to string for JSON
+    return {"progress": entries}

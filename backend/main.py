@@ -18,4 +18,3 @@ app.include_router(query.router, prefix="/query")
 app.include_router(auth.router, prefix="/auth")
 app.include_router(cleanup.router, prefix="/clear_pdfs")
 
-

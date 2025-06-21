@@ -13,6 +13,7 @@ import ChatBox from "./components/ChatBox";
 import Navbar from "./components/Navbar";
 import Quiz from "./components/Quiz";
 import GenerateFlashcards from "./components/GenerateFlashcards";
+import Dashboard from "./components/Dashboard";
 // ✅ PrivateRoute to protect authenticated pages
 function PrivateRoute({ element }) {
   const user = localStorage.getItem("user");
@@ -30,7 +31,8 @@ function AppContent() {
     "/quiz",
     "/login",
     "/signup",
-    "/flashcards"
+    "/flashcards",
+    "/dashboard"
   ].includes(location.pathname);
   const showNavbar = isProtectedPath;
 
@@ -54,6 +56,10 @@ function AppContent() {
           <Route
             path="/flashcards"
             element={<PrivateRoute element={<GenerateFlashcards />} />}
+          />
+          <Route
+            path="/dashboard"
+            element={<PrivateRoute element={<Dashboard />} />}
           />
         </Routes>
       </div>

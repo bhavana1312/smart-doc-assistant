@@ -74,16 +74,24 @@ export default function Navbar() {
           {user ? (
             <>
               <span className={`font-medium text-sm sm:text-base ${nameColor}`}>
-                👋 {user.name}
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  whileHover={{ scale: 1.1 }}
+                  onClick={() => navigate("/dashboard")}
+                  className={`text-lg px-3 py-1 rounded-lg ${themeButton} transition`}
+                >
+                  Dashbord
+                </motion.button>
               </span>
               <motion.button
-                whileTap={{ scale: 0.95 }}
-                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.1 }}
                 onClick={handleLogout}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm sm:text-base transition shadow"
+                className={`text-lg px-4 py-1 rounded-lg ${themeButton} transition hover:bg-red-600 hover:text-white`}
               >
                 Logout
               </motion.button>
+              
             </>
           ) : (
             <motion.button

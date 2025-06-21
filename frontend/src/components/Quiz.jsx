@@ -44,14 +44,30 @@ export default function Quiz() {
     setAnswers({ ...answers, [qIndex]: option });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let sc = 0;
     questions.forEach((q, idx) => {
       if (answers[idx] === q.answer) sc++;
     });
     setScore(sc);
     setSubmitted(true);
+
+    try {
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/save-quiz-progress`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: user.email,
+          score: sc,
+          total_questions: questions.length,
+          correct_answers: sc,
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to save progress", err);
+    }
   };
+  
 
   const bgGradient = darkMode
     ? "bg-gradient-to-br from-gray-900 via-black to-gray-800"

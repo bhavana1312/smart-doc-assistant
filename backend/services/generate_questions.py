@@ -13,7 +13,7 @@ if not groq_api_key:
 client = Groq(api_key=groq_api_key)
 
 
-def generate_mcq_from_text(pdf_text: str, num_questions: int = 5):
+def generate_mcq_from_text(pdf_text: str, num_questions: int = 10):
     prompt = f"""
 You are an educational assistant. Based on the academic content below, generate {num_questions} multiple choice questions (MCQs). 
 
