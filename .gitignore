@@ -1,0 +1,74 @@
+# === PYTHON BACKEND ===
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environment
+venv/
+.env
+.env.*
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# PyMuPDF cache
+*.xoj
+*.pdf.save
+*.pdf.xoj
+
+# IDE configs
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# === FASTAPI Specific ===
+instance/
+*.db
+*.sqlite3
+
+# === Qdrant / Vector DB (if any files are stored locally) ===
+qdrant_storage/
+
+# === REACT FRONTEND (Vite) ===
+
+# Node modules
+node_modules/
+
+# Build output
+dist/
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local env
+*.local
+.env
+.env.*
+
+# Editor directories
+.DS_Store
+*.swp
+
+# === COMMON ===
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# JetBrains IDEs
+*.iml
+*.ipr
+*.iws
+out/
+
+# Other
+*.bak
